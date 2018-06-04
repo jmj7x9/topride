@@ -1,0 +1,205 @@
+﻿using UnityEngine;
+
+public class RideMovement : MonoBehaviour
+{
+    public int m_PlayerNumber = 1;         
+    public float m_Speed = 6f;            
+    public float m_TurnSpeed = 180f;
+    //public AudioSource m_MovementAudio;    
+    //public AudioClip m_EngineIdling;       
+    //public AudioClip m_EngineDriving;      
+    //public float m_PitchRange = 0.2f;
+    public float m_BrakeSpeed = .9f;
+    public float m_MaxBrakePitch = .2f;
+    public float m_MaxTurnPitch = 30f;
+    public float m_TurnPitchSpeed = 1.5f;
+
+
+    private string m_MovementAxisName;     
+    private string m_TurnAxisName;         
+    private Rigidbody m_Rigidbody;         
+    private float m_MovementInputValue;    
+    private float m_TurnInputValue;        
+    private float m_OriginalPitch;
+
+    private string m_BrakeName;
+    private float m_BrakeInputValue;
+    private float m_BrakePull;
+    private int m_BeenBraking;
+    private int m_Bonus;
+    private float m_TurnPitch;
+
+    //remove
+    private Vector3 m_original_position;
+
+
+    private void Awake()
+    {
+        m_Rigidbody = GetComponent<Rigidbody>();
+        m_original_position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z);
+    }
+
+
+    private void OnEnable ()
+    {
+        m_Rigidbody.isKinematic = false;
+        m_MovementInputValue = 2f;
+        m_TurnInputValue = 0f;
+        m_BrakePull = 1f;
+        m_BeenBraking = 0;
+        m_Bonus = 1;
+    }
+
+
+    private void OnDisable ()
+    {
+        m_Rigidbody.isKinematic = true;
+    }
+
+
+    private void Start()
+    {
+        //m_MovementAxisName = "Vertical" + m_PlayerNumber;
+        m_TurnAxisName = "Horizontal" + m_PlayerNumber;
+
+        //m_OriginalPitch = m_MovementAudio.pitch;
+
+        m_BrakeName = "brake";
+    }
+    
+
+    private void Update()
+    {
+        // Store the player's input and make sure the audio for the engine is playing.
+        //m_MovementInputValue = Input.GetAxis(m_MovementAxisName);
+        m_TurnInputValue = Input.GetAxis(m_TurnAxisName);
+
+        m_BrakeInputValue = Input.GetAxis(m_BrakeName);
+
+        //EngineAudio();
+    }
+
+    /*
+    private void EngineAudio()
+    {
+        // Play the correct audio clip based on whether or not the tank is moving and what audio is currently playing.
+        if (Mathf.Abs(m_MovementInputValue) < 0.1f && Mathf.Abs(m_TurnInputValue) < 0.1f)
+        {
+            if (m_MovementAudio.clip == m_EngineDriving)
+            {
+                m_MovementAudio.clip = m_EngineIdling;
+                m_MovementAudio.pitch = Random.Range(m_OriginalPitch - m_PitchRange, m_OriginalPitch + m_PitchRange);
+                m_MovementAudio.Play();
+            }
+        }
+        else
+        {
+            if (m_MovementAudio.clip == m_EngineIdling)
+            {
+                m_MovementAudio.clip = m_EngineDriving;
+                m_MovementAudio.pitch = Random.Range(m_OriginalPitch - m_PitchRange, m_OriginalPitch + m_PitchRange);
+                m_MovementAudio.Play();
+            }
+        }
+
+    }
+    */
+
+    private void FixedUpdate()
+    {
+        // Move and turn the tank.
+        Move();
+        Turn();
+    }
+
+
+    private void Move()
+    {
+        // Adjust the position of the tank based on the player's input.
+
+        if (m_Bonus > 1)
+            m_Bonus -= 1;
+        if (m_BrakeInputValue > .1f && m_BrakePull > 0f)
+        {
+            m_BrakePull *= m_BrakeSpeed;
+            m_BeenBraking += 1;
+            //Get some initial speed if significantly braked (speed of ~0.0).
+            if (m_BrakePull <= .1f)
+            {
+                m_BrakePull = .2f;
+            }
+        }
+        else if (m_BrakeInputValue <= .1f && m_BrakePull < 1f)
+        {
+            m_BrakePull /= m_BrakeSpeed;
+            if(m_BeenBraking > 12) //make beenbrakingthreshold a public variable
+            {
+                m_Bonus = 8; //make bonus a public variable
+                //Make visual indicator
+            }
+            m_BeenBraking = 0;
+        }
+        Vector3 movement = transform.forward * m_MovementInputValue * m_Speed * Time.deltaTime * m_BrakePull * m_Bonus;
+
+        m_Rigidbody.MovePosition(m_Rigidbody.position + movement);
+    }
+
+
+    private void Turn()
+    {
+        // Adjust the rotation of the tank based on the player's input.
+        float turn = m_TurnInputValue * m_TurnSpeed * Time.deltaTime;
+        //banking left
+        if (m_TurnInputValue < -.01f) //&& transform.rotation.z > (-1 * m_MaxTurnPitch))
+        {
+            m_TurnPitch -= m_TurnPitchSpeed;
+        }
+        //done banking left, reverting
+        /*
+        else if (m_TurnInputValue < .01f && m_TurnInputValue > -.01f && transform.rotation.z > 1f)
+        {
+            m_TurnPitch -= m_TurnPitchSpeed;
+            if (transform.rotation.z < 10f)
+            {
+                m_TurnPitch = 0;
+            }
+        }
+        */
+        //banking right
+        else if (m_TurnInputValue > .01f) //&& transform.rotation.z > m_MaxTurnPitch)
+        {
+            m_TurnPitch += m_TurnPitchSpeed;
+        }
+        //done banking right, reverting
+        /*
+        else if (m_TurnInputValue < .01f && m_TurnInputValue > -.01f && transform.rotation.z < -1f)
+        {
+            m_TurnPitch += m_TurnPitchSpeed;
+            if (transform.rotation.z > -10f)
+            {
+                m_TurnPitch = 0;
+            }
+        }
+        */
+        else m_TurnPitch = 0;
+        //we not gonna bank too hard
+        float z = transform.rotation.eulerAngles.z;
+        if (Mathf.Abs(z) > Mathf.Abs(m_MaxTurnPitch))
+        {
+            Debug.Log("UGH");
+            transform.eulerAngles = new Vector3(0f, 0f, 0f);
+            gameObject.transform.position = m_original_position;
+        }
+        //if (transform.rotation.z > m_MaxTurnPitch) m_TurnPitch = 0;//m_MaxBrakePitch;
+        //if (transform.rotation.z < (-1 * m_MaxTurnPitch)) m_TurnPitch = 0;//(-1 * m_MaxBrakePitch);
+
+        //m_Rigidbody.rotation.Set(transform.rotation.x, transform.rotation.y, m_TurnPitch, 0);
+        //transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y, m_TurnPitch);
+        else
+        {
+            Quaternion turnRotation = Quaternion.Euler(0f, turn, m_TurnPitch);
+            m_Rigidbody.MoveRotation(m_Rigidbody.rotation * turnRotation);
+        }
+
+    }
+}
