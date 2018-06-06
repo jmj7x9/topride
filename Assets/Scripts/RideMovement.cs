@@ -11,32 +11,31 @@ public class RideMovement : MonoBehaviour
     //public float m_PitchRange = 0.2f;
     public float m_BrakeSpeed = .9f;
     public float m_MaxBrakePitch = .2f;
-    public float m_MaxTurnPitch = 30f;
+    public float m_MaxTurnPitch = 35f;
     public float m_TurnPitchSpeed = 1.5f;
-
 
     private string m_MovementAxisName;     
     private string m_TurnAxisName;         
     private Rigidbody m_Rigidbody;         
     private float m_MovementInputValue;    
     private float m_TurnInputValue;        
-    private float m_OriginalPitch;
 
     private string m_BrakeName;
     private float m_BrakeInputValue;
     private float m_BrakePull;
     private int m_BeenBraking;
     private int m_Bonus;
-    private float m_TurnPitch;
+    //private float m_TurnPitch;
 
     //remove
-    private Vector3 m_original_position;
+    //private Vector3 m_original_position;
 
 
     private void Awake()
     {
         m_Rigidbody = GetComponent<Rigidbody>();
-        m_original_position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z);
+        //m_original_position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z);
+        //m_TurnPitch = 0f;
     }
 
 
@@ -64,7 +63,7 @@ public class RideMovement : MonoBehaviour
 
         //m_OriginalPitch = m_MovementAudio.pitch;
 
-        m_BrakeName = "brake";
+        m_BrakeName = "brake" + m_PlayerNumber;
     }
     
 
@@ -149,57 +148,12 @@ public class RideMovement : MonoBehaviour
     {
         // Adjust the rotation of the tank based on the player's input.
         float turn = m_TurnInputValue * m_TurnSpeed * Time.deltaTime;
-        //banking left
-        if (m_TurnInputValue < -.01f) //&& transform.rotation.z > (-1 * m_MaxTurnPitch))
-        {
-            m_TurnPitch -= m_TurnPitchSpeed;
-        }
-        //done banking left, reverting
-        /*
-        else if (m_TurnInputValue < .01f && m_TurnInputValue > -.01f && transform.rotation.z > 1f)
-        {
-            m_TurnPitch -= m_TurnPitchSpeed;
-            if (transform.rotation.z < 10f)
-            {
-                m_TurnPitch = 0;
-            }
-        }
-        */
-        //banking right
-        else if (m_TurnInputValue > .01f) //&& transform.rotation.z > m_MaxTurnPitch)
-        {
-            m_TurnPitch += m_TurnPitchSpeed;
-        }
-        //done banking right, reverting
-        /*
-        else if (m_TurnInputValue < .01f && m_TurnInputValue > -.01f && transform.rotation.z < -1f)
-        {
-            m_TurnPitch += m_TurnPitchSpeed;
-            if (transform.rotation.z > -10f)
-            {
-                m_TurnPitch = 0;
-            }
-        }
-        */
-        else m_TurnPitch = 0;
-        //we not gonna bank too hard
-        float z = transform.rotation.eulerAngles.z;
-        if (Mathf.Abs(z) > Mathf.Abs(m_MaxTurnPitch))
-        {
-            Debug.Log("UGH");
-            transform.eulerAngles = new Vector3(0f, 0f, 0f);
-            gameObject.transform.position = m_original_position;
-        }
-        //if (transform.rotation.z > m_MaxTurnPitch) m_TurnPitch = 0;//m_MaxBrakePitch;
-        //if (transform.rotation.z < (-1 * m_MaxTurnPitch)) m_TurnPitch = 0;//(-1 * m_MaxBrakePitch);
 
-        //m_Rigidbody.rotation.Set(transform.rotation.x, transform.rotation.y, m_TurnPitch, 0);
-        //transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y, m_TurnPitch);
-        else
-        {
-            Quaternion turnRotation = Quaternion.Euler(0f, turn, m_TurnPitch);
-            m_Rigidbody.MoveRotation(m_Rigidbody.rotation * turnRotation);
-        }
+        //Bank();
+
+        Quaternion turnRotation = Quaternion.Euler(0f, turn, 0f);
+        m_Rigidbody.MoveRotation(m_Rigidbody.rotation * turnRotation);
 
     }
+
 }
