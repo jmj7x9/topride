@@ -12,7 +12,6 @@ public class GameManager : MonoBehaviour
     public Text m_MessageText;              
     public GameObject m_TankPrefab;         
     public TankManager[] m_Tanks;
-    public GameObject[] m_Checkpoints;
 
 
     private int m_RoundNumber;              
@@ -24,11 +23,11 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        //my addition
-        for (int i = 0; i < m_Checkpoints.Length; i++)
-        {
-            m_Checkpoints[i].GetComponent<Renderer>().enabled = false;
-        }
+        //dont need this if checkpoints are triggers
+        //for (int i = 0; i < m_Checkpoints.Length; i++)
+        //{
+        //    m_Checkpoints[i].GetComponent<Renderer>().enabled = false;
+        //}
 
         m_StartWait = new WaitForSeconds(m_StartDelay);
         m_EndWait = new WaitForSeconds(m_EndDelay);
@@ -90,6 +89,8 @@ public class GameManager : MonoBehaviour
         m_RoundNumber++;
         m_MessageText.text = "ROUND " + m_RoundNumber;
 
+        //figure out how to do a countdown timer during this yield:
+        // https://answers.unity.com/questions/980339/count-down-timer-c-1.html
         yield return m_StartWait;
     }
 
@@ -139,6 +140,7 @@ public class GameManager : MonoBehaviour
     }
     */
     //my addition
+    /*
     private bool crossedAllCheckpoints()
     {
         bool allcheckpoints = false;
@@ -160,6 +162,16 @@ public class GameManager : MonoBehaviour
             }
         }
         return allcheckpoints;
+        
+    }
+    */
+    private bool crossedAllCheckpoints()
+    {
+        for (int i = 0; i < m_Tanks.Length; i++)
+        {
+            if (m_Tanks[i].passedAllCheckpoints()) return true;
+        }
+        return false;
     }
 
     private TankManager GetRoundWinner()
@@ -212,6 +224,7 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < m_Tanks.Length; i++)
         {
             m_Tanks[i].Reset();
+            m_Tanks[i].resetCheckpoints();
         }
     }
 

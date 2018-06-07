@@ -63,6 +63,7 @@
     <Compile Include="Assets\Scripts\Managers\GameManager.cs" />
     <Compile Include="Assets\Scripts\Managers\TankManager.cs" />
     <Compile Include="Assets\Scripts\RideMovement.cs" />
+    <Compile Include="Assets\Scripts\TriggerManager.cs" />
     <Reference Include="UnityEditor.StandardEvents">
       <HintPath>C:/Users/Public/Documents/Unity Projects/topride/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
     </Reference>

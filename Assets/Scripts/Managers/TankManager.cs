@@ -9,14 +9,15 @@ public class TankManager
     [HideInInspector] public int m_PlayerNumber;             
     [HideInInspector] public string m_ColoredPlayerText;
     [HideInInspector] public GameObject m_Instance;          
-    [HideInInspector] public int m_Wins;                     
+    [HideInInspector] public int m_Wins;
+    //should be m_check..
+    //[HideInInspector] bool[] checkpointsArray;
 
 
     private RideMovement m_Movement;       
     //private TankShooting m_Shooting;
     private GameObject m_CanvasGameObject;
     //my addition
-    private int checkpointsPassed;
 
 
     public void Setup()
@@ -36,7 +37,12 @@ public class TankManager
         {
             renderers[i].material.color = m_PlayerColor;
         }
-    }
+
+        //my addition, may need to make the checkpoint array size a var in TankManager's constructor
+        //sent by GameManger
+        //checkpointsArray = new bool[2];
+        resetCheckpoints();
+}
 
 
     public void DisableControl()
@@ -67,13 +73,23 @@ public class TankManager
     }
 
     //my addition
-    public int passedCheckpoint()
+    //public void passedCheckpoint(int checkpointNumber)
+    //{
+    //   m_Movement.m_Checkpoints[checkpointNumber] = true;
+    //}
+    public bool passedAllCheckpoints()
     {
-        checkpointsPassed++;
-        return checkpointsPassed;
+        for (int i = 0; i < m_Movement.m_Checkpoints.Length; i++)
+        {
+            if (m_Movement.m_Checkpoints[i].Equals(false)) return false;
+        }
+        return true;
     }
     public void resetCheckpoints()
     {
-        checkpointsPassed = 0;
+        for (int i = 0; i < m_Movement.m_Checkpoints.Length; i++)
+        {
+            m_Movement.m_Checkpoints[i] = false;
+        }
     }
 }
