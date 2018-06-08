@@ -12,13 +12,18 @@ public class GameManager : MonoBehaviour
     public Text m_MessageText;              
     public GameObject m_TankPrefab;         
     public TankManager[] m_Tanks;
+    //mine
+    public int m_NumberOfLaps = 2;
+    public int m_NumberOfCheckpoints;
 
 
     private int m_RoundNumber;              
     private WaitForSeconds m_StartWait;     
     private WaitForSeconds m_EndWait;       
     private TankManager m_RoundWinner;
-    private TankManager m_GameWinner;       
+    private TankManager m_GameWinner;
+    //mine
+    //private float m_countdownClock;
 
 
     private void Start()
@@ -30,6 +35,7 @@ public class GameManager : MonoBehaviour
         //}
 
         m_StartWait = new WaitForSeconds(m_StartDelay);
+        //m_countdownClock = 3.00f; //hardcoded a three second countdown
         m_EndWait = new WaitForSeconds(m_EndDelay);
 
         SpawnAllTanks();
@@ -43,6 +49,9 @@ public class GameManager : MonoBehaviour
     {
         for (int i = 0; i < m_Tanks.Length; i++)
         {
+            //my addition
+            m_Tanks[i].setNumberOfCheckpoints(m_NumberOfCheckpoints);
+            //
             m_Tanks[i].m_Instance =
                 Instantiate(m_TankPrefab, m_Tanks[i].m_SpawnPoint.position, m_Tanks[i].m_SpawnPoint.rotation) as GameObject;
             m_Tanks[i].m_PlayerNumber = i + 1;
@@ -88,18 +97,33 @@ public class GameManager : MonoBehaviour
         m_CameraControl.SetStartPositionAndSize();
         m_RoundNumber++;
         m_MessageText.text = "ROUND " + m_RoundNumber;
-
-        //figure out how to do a countdown timer during this yield:
-        // https://answers.unity.com/questions/980339/count-down-timer-c-1.html
         yield return m_StartWait;
     }
 
-
     private IEnumerator RoundPlaying()
     {
-        EnableTankControl();
+
+        int countdownClock = 3;
+        while (countdownClock >= 0)
+        {
+            if (countdownClock == 0)
+            {
+                m_MessageText.text = "GO";
+                EnableTankControl();
+                countdownClock = -1;
+            }
+            else
+            {
+                m_MessageText.text = countdownClock.ToString();
+                countdownClock -= 1;
+            }
+            yield return new WaitForSeconds(0.5f);
+        }
+
+        //EnableTankControl();
         m_MessageText.text = string.Empty;
-        while (!crossedAllCheckpoints())
+        while (!finishedAllLaps())
+        //while (!crossedAllCheckpoints())
         //while (!OneTankLeft())
         {
             yield return null;
@@ -107,8 +131,25 @@ public class GameManager : MonoBehaviour
 
         
     }
-
-
+    /*
+    private IEnumerator countdown()
+    {
+        float countdownClock = 3.00f;
+        while (countdownClock > -.2f)
+        {
+            if (countdownClock <= 0)
+            {
+                m_MessageText.text = "GO";
+            }
+            else
+            {
+                m_MessageText.text = countdownClock.ToString("N2");
+                countdownClock -= .01f;
+            }
+        }
+        yield return null;
+    }
+    */
     private IEnumerator RoundEnding()
     {
         DisableTankControl();
@@ -165,11 +206,18 @@ public class GameManager : MonoBehaviour
         
     }
     */
-    private bool crossedAllCheckpoints()
+    private bool finishedAllLaps()
     {
         for (int i = 0; i < m_Tanks.Length; i++)
         {
-            if (m_Tanks[i].passedAllCheckpoints()) return true;
+            bool passedAllCheckpoints = m_Tanks[i].passedAllCheckpoints();
+            if (m_Tanks[i].getLapsCompleted() == m_NumberOfLaps) return true;
+            //else if passed all checkpoints and not equal number laps, then increase number of laps
+            else if (passedAllCheckpoints)
+            {
+                m_Tanks[i].lapCompleted();
+                m_Tanks[i].resetCheckpoints();
+            }
         }
         return false;
     }
@@ -224,7 +272,6 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < m_Tanks.Length; i++)
         {
             m_Tanks[i].Reset();
-            m_Tanks[i].resetCheckpoints();
         }
     }
 

@@ -14,19 +14,23 @@ public class TankManager
     //[HideInInspector] bool[] checkpointsArray;
 
 
-    private RideMovement m_Movement;       
+    private RideMovement m_Movement;
+    private RideCheckpoints m_RideCheckpoints;
     //private TankShooting m_Shooting;
     private GameObject m_CanvasGameObject;
     //my addition
+    private int m_NumberOfCheckpoints;
 
 
     public void Setup()
     {
         m_Movement = m_Instance.GetComponent<RideMovement>();
+        m_RideCheckpoints = m_Instance.GetComponent<RideCheckpoints>();
         //m_Shooting = m_Instance.GetComponent<TankShooting>();
         //m_CanvasGameObject = m_Instance.GetComponentInChildren<Canvas>().gameObject;
 
         m_Movement.m_PlayerNumber = m_PlayerNumber;
+        m_RideCheckpoints.m_Checkpoints = new bool[m_NumberOfCheckpoints];
         //m_Shooting.m_PlayerNumber = m_PlayerNumber;
 
         m_ColoredPlayerText = "<color=#" + ColorUtility.ToHtmlStringRGB(m_PlayerColor) + ">PLAYER " + m_PlayerNumber + "</color>";
@@ -41,7 +45,6 @@ public class TankManager
         //my addition, may need to make the checkpoint array size a var in TankManager's constructor
         //sent by GameManger
         //checkpointsArray = new bool[2];
-        resetCheckpoints();
 }
 
 
@@ -68,6 +71,9 @@ public class TankManager
         m_Instance.transform.position = m_SpawnPoint.position;
         m_Instance.transform.rotation = m_SpawnPoint.rotation;
 
+        resetCheckpoints();
+        resetLaps();
+
         m_Instance.SetActive(false);
         m_Instance.SetActive(true);
     }
@@ -79,17 +85,42 @@ public class TankManager
     //}
     public bool passedAllCheckpoints()
     {
-        for (int i = 0; i < m_Movement.m_Checkpoints.Length; i++)
+        //for (int i = 0; i < m_RideCheckpoints.m_Checkpoints.Length; i++)
+        for (int i = 0; i < m_NumberOfCheckpoints; i++)
         {
-            if (m_Movement.m_Checkpoints[i].Equals(false)) return false;
+            //Debug.Log(m_RideCheckpoints.m_Checkpoints.Length + "hi");
+            if (m_RideCheckpoints.m_Checkpoints[i].Equals(false)) return false;
         }
         return true;
     }
     public void resetCheckpoints()
     {
-        for (int i = 0; i < m_Movement.m_Checkpoints.Length; i++)
+        for (int i = 0; i < m_NumberOfCheckpoints; i++)
         {
-            m_Movement.m_Checkpoints[i] = false;
+            m_RideCheckpoints.m_Checkpoints[i] = false;
         }
+    }
+    private void resetLaps()
+    {
+        for (int i = 0; i < m_NumberOfCheckpoints; i++)
+        {
+            m_RideCheckpoints.m_LapsCompleted = 0;
+        }
+    }
+    public void setNumberOfCheckpoints(int numberOfCheckpoints)
+    {
+        m_NumberOfCheckpoints = numberOfCheckpoints;
+        //Debug.Log("huh" + numberOfCheckpoints);
+        //m_RideCheckpoints.m_Checkpoints = null;
+        //m_RideCheckpoints.m_Checkpoints = new bool[numberOfCheckpoints];
+    }
+    public int getLapsCompleted()
+    {
+        //Debug.Log(m_RideCheckpoints.m_LapsCompleted);
+        return m_RideCheckpoints.m_LapsCompleted;
+    }
+    public void lapCompleted()
+    {
+        m_RideCheckpoints.m_LapsCompleted++;
     }
 }

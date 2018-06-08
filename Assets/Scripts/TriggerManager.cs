@@ -17,12 +17,12 @@ public class TriggerManager : MonoBehaviour
         if (Vector3.Distance(othersPosition, frontPosition) < Vector3.Distance(othersPosition, backPosition))
         {
             int checkpointNumber = int.Parse(this.name.Substring(1));
-            RideMovement rm = other.transform.root.GetComponent("RideMovement") as RideMovement;
+            RideCheckpoints rc = other.transform.root.GetComponent("RideCheckpoints") as RideCheckpoints;
             for (int i = 0; i < checkpointNumber; i++)
             {
-                if (rm.m_Checkpoints[i] == false) return;
+                if (rc.m_Checkpoints[i] == false) return;
             }
-            rm.m_Checkpoints[checkpointNumber] = true;
+            rc.m_Checkpoints[checkpointNumber] = true;
         }
     }
 }

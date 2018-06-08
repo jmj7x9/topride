@@ -1109,7 +1109,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_NumRoundsToWin: 5
-  m_StartDelay: 3
+  m_StartDelay: 0.5
   m_EndDelay: 3
   m_CameraControl: {fileID: 774097473}
   m_MessageText: {fileID: 347523427}
@@ -1128,6 +1128,8 @@ MonoBehaviour:
     m_ColoredPlayerText: 
     m_Instance: {fileID: 0}
     m_Wins: 0
+  m_NumberOfLaps: 2
+  m_NumberOfCheckpoints: 2
 --- !u!4 &1676463676
 Transform:
   m_ObjectHideFlags: 0

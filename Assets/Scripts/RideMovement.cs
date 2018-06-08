@@ -13,7 +13,7 @@ public class RideMovement : MonoBehaviour
     public float m_MaxBrakePitch = .2f;
     public float m_MaxTurnPitch = 35f;
     public float m_TurnPitchSpeed = 1.5f;
-    [HideInInspector] public bool[] m_Checkpoints;
+    //[HideInInspector] public bool[] m_Checkpoints;
 
     private string m_MovementAxisName;     
     private string m_TurnAxisName;         
@@ -37,7 +37,7 @@ public class RideMovement : MonoBehaviour
         m_Rigidbody = GetComponent<Rigidbody>();
         //m_original_position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z);
         //m_TurnPitch = 0f;
-        m_Checkpoints = new bool[2];
+        //m_Checkpoints = new bool[2];
     }
 
 

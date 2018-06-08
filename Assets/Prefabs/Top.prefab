@@ -24,6 +24,7 @@ GameObject:
   - component: {fileID: 135210531806831088}
   - component: {fileID: 23938271490261642}
   - component: {fileID: 114834211988168608}
+  - component: {fileID: 114079799393637236}
   m_Layer: 8
   m_Name: Top
   m_TagString: Untagged
@@ -175,6 +176,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 116
   m_CollisionDetection: 0
+--- !u!114 &114079799393637236
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1321103035212882}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13c293769eae2634db60bed52c45ab48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Checkpoints: 
+  m_LapsCompleted: 0
 --- !u!114 &114834211988168608
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -193,7 +207,6 @@ MonoBehaviour:
   m_MaxBrakePitch: 0
   m_MaxTurnPitch: 35
   m_TurnPitchSpeed: 1.5
-  m_Checkpoints: 
 --- !u!135 &135210531806831088
 SphereCollider:
   m_ObjectHideFlags: 1
