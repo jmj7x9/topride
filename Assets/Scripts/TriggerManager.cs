@@ -2,7 +2,7 @@
 
 public class TriggerManager : MonoBehaviour
 {
-    void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
         Transform frontTransform = transform.Find("frontLocation");
         Transform backTransform = transform.Find("backLocation");

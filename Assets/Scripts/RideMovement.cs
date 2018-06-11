@@ -14,6 +14,7 @@ public class RideMovement : MonoBehaviour
     public float m_MaxTurnPitch = 35f;
     public float m_TurnPitchSpeed = 1.5f;
     //[HideInInspector] public bool[] m_Checkpoints;
+    [HideInInspector] public bool m_OnBoostPanel = false;
 
     private string m_MovementAxisName;     
     private string m_TurnAxisName;         
@@ -120,6 +121,9 @@ public class RideMovement : MonoBehaviour
 
         if (m_Bonus > 1)
             m_Bonus -= 1;
+        //if on a boost panel when you release the brake i.e., when the brake's input
+        // is 0, and the brake's pull is still is active (<1) then increase boost
+        if (m_OnBoostPanel && m_BrakePull < 1 && m_BrakeInputValue < 1) m_Bonus = 8;
         if (m_BrakeInputValue > .1f && m_BrakePull > 0f)
         {
             m_BrakePull *= m_BrakeSpeed;
@@ -130,15 +134,18 @@ public class RideMovement : MonoBehaviour
                 m_BrakePull = .2f;
             }
         }
+
         else if (m_BrakeInputValue <= .1f && m_BrakePull < 1f)
         {
-            m_BrakePull /= m_BrakeSpeed;
-            if(m_BeenBraking > 12) //make beenbrakingthreshold a public variable
+            //if braked enough, add a speed bonus
+            if (m_BeenBraking > 12) //make beenbrakingthreshold a public variable
             {
-                m_Bonus = 8; //make bonus a public variable
+                m_Bonus += 4; //make bonus a public variable
                 //Make visual indicator
             }
+            m_BrakePull = 1;
             m_BeenBraking = 0;
+
         }
         Vector3 movement = transform.forward * m_MovementInputValue * m_Speed * Time.deltaTime * m_BrakePull * m_Bonus;
 
