@@ -203,10 +203,14 @@ MonoBehaviour:
   m_PlayerNumber: 1
   m_Speed: 6
   m_TurnSpeed: 180
+  m_BonusDecay: 0.8
+  m_BoostBonus: 6
+  m_BoostPadBonus: 9
   m_BrakeSpeed: 0.92
   m_MaxBrakePitch: 0
   m_MaxTurnPitch: 35
   m_TurnPitchSpeed: 1.5
+  m_OnBoostPanel: 0
 --- !u!135 &135210531806831088
 SphereCollider:
   m_ObjectHideFlags: 1

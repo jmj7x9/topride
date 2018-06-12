@@ -5,6 +5,9 @@ public class RideMovement : MonoBehaviour
     public int m_PlayerNumber = 1;         
     public float m_Speed = 6f;            
     public float m_TurnSpeed = 180f;
+    public float m_BonusDecay = 0.95f;
+    public float m_BoostBonus = 4;
+    public float m_BoostPadBonus = 8;
     //public AudioSource m_MovementAudio;    
     //public AudioClip m_EngineIdling;       
     //public AudioClip m_EngineDriving;      
@@ -26,7 +29,7 @@ public class RideMovement : MonoBehaviour
     private float m_BrakeInputValue;
     private float m_BrakePull;
     private int m_BeenBraking;
-    private int m_Bonus;
+    private float m_Bonus;
     //private float m_TurnPitch;
 
     //remove
@@ -120,10 +123,13 @@ public class RideMovement : MonoBehaviour
         // Adjust the position of the tank based on the player's input.
 
         if (m_Bonus > 1)
-            m_Bonus -= 1;
+            m_Bonus = (m_Bonus - 1) * m_BonusDecay + 1;
+            //m_Bonus *= m_BonusDecay;
+
         //if on a boost panel when you release the brake i.e., when the brake's input
         // is 0, and the brake's pull is still is active (<1) then increase boost
         if (m_OnBoostPanel && m_BrakePull < 1 && m_BrakeInputValue < 1) m_Bonus = 8;
+
         if (m_BrakeInputValue > .1f && m_BrakePull > 0f)
         {
             m_BrakePull *= m_BrakeSpeed;
@@ -138,15 +144,16 @@ public class RideMovement : MonoBehaviour
         else if (m_BrakeInputValue <= .1f && m_BrakePull < 1f)
         {
             //if braked enough, add a speed bonus
-            if (m_BeenBraking > 12) //make beenbrakingthreshold a public variable
+            if (m_BeenBraking > 12 && m_Bonus < m_BoostPadBonus) //make beenbrakingthreshold a public variable
             {
-                m_Bonus += 4; //make bonus a public variable
+                m_Bonus = m_BoostBonus; //make bonus a public variable
                 //Make visual indicator
             }
             m_BrakePull = 1;
             m_BeenBraking = 0;
 
         }
+
         Vector3 movement = transform.forward * m_MovementInputValue * m_Speed * Time.deltaTime * m_BrakePull * m_Bonus;
 
         m_Rigidbody.MovePosition(m_Rigidbody.position + movement);
