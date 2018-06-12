@@ -1159,16 +1159,16 @@ MonoBehaviour:
   m_EndDelay: 3
   m_CameraControl: {fileID: 774097473}
   m_MessageText: {fileID: 347523427}
-  m_TankPrefab: {fileID: 1321103035212882, guid: dacc4c2b87324db4bbd448d4eb7adb94,
+  m_RidePrefab: {fileID: 1321103035212882, guid: dacc4c2b87324db4bbd448d4eb7adb94,
     type: 2}
-  m_Tanks:
-  - m_PlayerColor: {r: 0.8113208, g: 0.2946778, b: 0.2946778, a: 0}
+  m_Rides:
+  - m_PlayerColor: {r: 0.735849, g: 0.045122836, b: 0.045122836, a: 0}
     m_SpawnPoint: {fileID: 1540804224}
     m_PlayerNumber: 0
     m_ColoredPlayerText: 
     m_Instance: {fileID: 0}
     m_Wins: 0
-  - m_PlayerColor: {r: 0.20790316, g: 0.30315265, b: 0.6037736, a: 0}
+  - m_PlayerColor: {r: 0.7924528, g: 0.31772873, b: 0.44647467, a: 0}
     m_SpawnPoint: {fileID: 935748308}
     m_PlayerNumber: 0
     m_ColoredPlayerText: 

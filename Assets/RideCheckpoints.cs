@@ -9,7 +9,7 @@ public class RideCheckpoints : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        m_Checkpoints = new bool[99]; //hold on a sec
+        //m_Checkpoints initialized in RideManager
         m_LapsCompleted = 0;
     }
 
