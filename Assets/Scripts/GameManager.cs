@@ -96,31 +96,34 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator RoundPlaying()
     {
-
-        int countdownClock = 3;
-        while (countdownClock >= 0)
-        {
-            if (countdownClock == 0)
-            {
-                m_MessageText.text = "GO";
+        
+        //int countdownClock = 3;
+        //while (countdownClock >= 0)
+        //{
+        //    if (countdownClock == 0)
+        //    {
+        //        m_MessageText.text = "GO";
                 EnableRideControl();
-                countdownClock = -1;
-            }
-            else
-            {
-                m_MessageText.text = countdownClock.ToString();
-                countdownClock -= 1;
-            }
-            yield return new WaitForSeconds(0.5f);
-        }
+        //        countdownClock = -1;
+        //    }
+        //    else
+        //    {
+        //        m_MessageText.text = countdownClock.ToString();
+        //        countdownClock -= 1;
+        //    }
+        //
+        //    yield return new WaitForSeconds(0.5f);
+        //}
+        
         float time = 0.00f;
 
         //m_MessageText.text = string.Empty;
-        m_MessageText.text = time.ToString("F2") + "\n\n\n\n\n";
+        m_MessageText.text = time.ToString("F2") + "\n\n\n\n\n\n\n";
+        
         while (!finishedAllLaps())
         {
-            time += Time.deltaTime;
-            m_MessageText.text = time.ToString("F2") + "\n\n\n\n\n";
+            //time += Time.deltaTime;
+            //m_MessageText.text = time.ToString("F2") + "\n\n\n\n\n";
             yield return null;
         }
 
@@ -228,4 +231,5 @@ public class GameManager : MonoBehaviour
             m_Rides[i].DisableControl();
         }
     }
+
 }
