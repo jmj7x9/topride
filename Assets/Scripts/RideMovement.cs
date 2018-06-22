@@ -2,8 +2,9 @@
 // https://unity3d.com/learn/tutorials/projects/tanks-tutorial/tank-creation-control?playlist=20081
 
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class RideMovement : MonoBehaviour
+public class RideMovement : NetworkBehaviour
 {
     public int m_PlayerNumber = 1;         
     public float m_Speed = 6f;            
@@ -70,6 +71,7 @@ public class RideMovement : MonoBehaviour
 
     private void Update()
     {
+        if (!isLocalPlayer) return;
         // Store the player's input and make sure the audio for the engine is playing.
         m_TurnInputValue = Input.GetAxis(m_TurnAxisName);
 
