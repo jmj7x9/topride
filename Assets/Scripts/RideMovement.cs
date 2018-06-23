@@ -2,9 +2,8 @@
 // https://unity3d.com/learn/tutorials/projects/tanks-tutorial/tank-creation-control?playlist=20081
 
 using UnityEngine;
-using UnityEngine.Networking;
 
-public class RideMovement : NetworkBehaviour
+public class RideMovement : MonoBehaviour
 {
     public int m_PlayerNumber = 1;         
     public float m_Speed = 6f;            
@@ -71,7 +70,6 @@ public class RideMovement : NetworkBehaviour
 
     private void Update()
     {
-        if (!isLocalPlayer) return;
         // Store the player's input and make sure the audio for the engine is playing.
         m_TurnInputValue = Input.GetAxis(m_TurnAxisName);
 
@@ -169,11 +167,36 @@ public class RideMovement : NetworkBehaviour
         // Adjust the rotation of the topride based on the player's input.
         float turn = m_TurnInputValue * m_TurnSpeed * Time.deltaTime;
 
-        //Bank(); //unwritten, aim is to dip the z-axis of the topride when turning, and "un-dip" the ride when done turning
+        Bank(); //unwritten, aim is to dip the z-axis of the topride when turning, and "un-dip" the ride when done turning
 
         Quaternion turnRotation = Quaternion.Euler(0f, turn, 0f);
         m_Rigidbody.MoveRotation(m_Rigidbody.rotation * turnRotation);
 
+    }
+
+    private void Bank()
+    {
+        float z = m_Rigidbody.rotation.z;
+        float x = m_Rigidbody.rotation.x;
+        //if (z > 1f || z < -1f || x > 1f || x < -1f)
+        if (z < 1f && z > -1f && z != 0f)
+        {
+            m_Rigidbody.MoveRotation(Quaternion.Euler(0f, m_Rigidbody.rotation.y, 0f));
+        }
+        else
+        {
+            Quaternion restoreBankRotation = Quaternion.Euler(0f, 0f, (-1 * z));
+            m_Rigidbody.MoveRotation(m_Rigidbody.rotation * restoreBankRotation);
+        }
+
+        //if (x < 1f && x > -1f) m_Rigidbody.rotation.Set(0f, m_Rigidbody.rotation.y, z, 0f);
+        if (m_TurnInputValue > .01f && z < 30)
+        {
+            Quaternion bankRotation = Quaternion.Euler(0f, 0f, 2f);
+            m_Rigidbody.MoveRotation(m_Rigidbody.rotation * bankRotation);
+        }
+        Quaternion stopBankRotation = Quaternion.Euler(0f, 0f, 0f);
+        m_Rigidbody.MoveRotation(m_Rigidbody.rotation * stopBankRotation);
     }
 
 }
